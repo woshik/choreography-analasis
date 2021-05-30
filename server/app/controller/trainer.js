@@ -41,7 +41,7 @@ const add = async (req, res) => {
   const userData = { ...req.routeData };
 
   const { data: user } = await getUser({ email: userData.email }, {}, { _id: 1 });
-  const userExist = user[0] ?? {};
+  const userExist = user?.[0];
 
   if (userExist) {
     return res.status(400).json({ message: 'Email already exists' });
