@@ -6,7 +6,7 @@ const login = async (req, res, next) => {
   const { username, password } = req.routeData;
 
   const { data: user } = await getUser({ username });
-  const userData = user[0] ?? {};
+  const userData = user?.[0];
 
   if (!userData) {
     return res.status(400).json({ message: 'Wrong username address' });

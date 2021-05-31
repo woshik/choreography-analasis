@@ -22,7 +22,7 @@ module.exports = (userType) => (req, res, next) => {
               { _id: ObjectId(decoded.id) }, {},
               { active_exercise: 0 },
             );
-            const userData = user[0] ?? {};
+            const userData = user?.[0] ?? {};
 
             req.user = userData;
             next();
