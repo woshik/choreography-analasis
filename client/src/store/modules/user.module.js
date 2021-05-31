@@ -55,7 +55,7 @@ export default {
   },
   getters: {
     getUserFullName: ({ user }) => user.fullName,
-    getUserEmail: ({ user }) => user.email,
+    getUsername: ({ user }) => user.username,
     getUserDob: ({ user }) => user.dob,
     getUserRole: ({ user }) => user.role,
     getUserToken: ({ token: accessToken }) => accessToken,

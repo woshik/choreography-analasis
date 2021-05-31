@@ -10,12 +10,10 @@ const traineeRegistration = {
     'any.required': 'Date of birth must be a valid date',
     'date.base': 'Date of birth must be a valid date',
   }),
-  email: Joi.string().email().lowercase().required()
-    .messages({
-      'string.email': 'Enter a valid email address',
-      'any.required': 'Email is required',
-      'string.empty': 'Email is required',
-    }),
+  username: Joi.string().required().messages({
+    'any.required': 'Username is required',
+    'string.empty': 'Username is required',
+  }),
   password: Joi.string().default('123456'),
 };
 
@@ -37,11 +35,13 @@ const exerciseAssign = {
     'any.required': 'Exercise name is required',
     'string.empty': 'Exercise name is required',
   }),
-  mode: Joi.string().valid('single', 'double').required().messages({
+  mode: Joi.string().valid('Single', 'Double').required().messages({
     'any.required': 'Exercise name is required',
     'string.empty': 'Exercise name is required',
   }),
   trainingName: Joi.string().required(),
+  bodyPosition: Joi.string().required(),
+  eyesActivity: Joi.string().required(),
 };
 
 const performedExerciseData = {
@@ -50,11 +50,13 @@ const performedExerciseData = {
   personOne: Joi.object(),
   personTwo: Joi.object(),
   keyboardCode: Joi.array(),
-  index: Joi.string(),
-  exerciseId: Joi.string(),
+  index: Joi.string().required(),
+  exerciseId: Joi.string().required(),
   details: Joi.object(),
-  name: Joi.string(),
-  mode: Joi.string(),
+  name: Joi.string().required(),
+  mode: Joi.string().required(),
+  bodyPosition: Joi.string().required(),
+  eyesActivity: Joi.string().required(),
 };
 
 module.exports = {

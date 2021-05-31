@@ -18,8 +18,8 @@
           </div>
 
           <div class="form-group">
-            <label for="exampleFormControlInput1">Email</label>
-            <input type="text" :value="getUserEmail" class="form-control" disabled />
+            <label for="exampleFormControlInput1">Username</label>
+            <input type="text" :value="getUsername" class="form-control" disabled />
           </div>
 
           <div class="form-group">
@@ -74,7 +74,7 @@ export default {
   formFields: ['fullName', 'dob'],
   mounted() {
     this.fullName = this.getUserFullName;
-    this.email = this.getUserEmail;
+    this.username = this.getUsername;
     this.dob = new Date(this.getUserDob);
   },
   methods: {
@@ -102,7 +102,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('user', ['getUserFullName', 'getUserEmail', 'getUserDob', 'getUserRole']),
+    ...mapGetters('user', ['getUserFullName', 'getUsername', 'getUserDob', 'getUserRole']),
   },
 };
 </script>

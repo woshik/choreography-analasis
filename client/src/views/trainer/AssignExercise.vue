@@ -24,7 +24,7 @@
             </template>
           </VSelect>
         </div>
-         <div class="form-group">
+        <div class="form-group">
           <label for="trainingName">Training Name/Serial</label>
           <input
             type="text"
@@ -36,6 +36,56 @@
           />
         </div>
         <div class="d-block my-3">
+          <label>Select Body Position</label>
+          <div class="custom-control custom-radio">
+            <input
+              id="standing"
+              name="bodyPosition"
+              type="radio"
+              class="custom-control-input"
+              v-model="bodyPosition"
+              value="Standing"
+            />
+            <label class="custom-control-label" for="standing">Standing</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input
+              id="sitting"
+              name="bodyPosition"
+              type="radio"
+              class="custom-control-input"
+              v-model="bodyPosition"
+              value="Sitting"
+            />
+            <label class="custom-control-label" for="sitting">Sitting</label>
+          </div>
+        </div>
+        <div class="d-block my-3">
+          <label>Select Eyes Activity</label>
+          <div class="custom-control custom-radio">
+            <input
+              id="open"
+              name="eyesActivity"
+              type="radio"
+              class="custom-control-input"
+              v-model="eyesActivity"
+              value="Open"
+            />
+            <label class="custom-control-label" for="open">Open</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input
+              id="closed"
+              name="eyesActivity"
+              type="radio"
+              class="custom-control-input"
+              v-model="eyesActivity"
+              value="Closed"
+            />
+            <label class="custom-control-label" for="closed">Closed</label>
+          </div>
+        </div>
+        <div class="d-block my-3">
           <label>Select Exercise Mode</label>
           <div class="custom-control custom-radio">
             <input
@@ -44,22 +94,23 @@
               type="radio"
               class="custom-control-input"
               v-model="exerciseMode"
-              value="single"
+              value="Single"
             />
             <label class="custom-control-label" for="single">Single</label>
           </div>
           <div class="custom-control custom-radio">
             <input
-              id="debit"
+              id="double"
               name="mode"
               type="radio"
               class="custom-control-input"
               v-model="exerciseMode"
-              value="double"
+              value="Double"
             />
-            <label class="custom-control-label" for="debit">Double</label>
+            <label class="custom-control-label" for="double">Double</label>
           </div>
         </div>
+
         <button class="btn btn-primary">Assign</button>
       </form>
     </div>
@@ -85,6 +136,8 @@ export default {
       traineeService: new TraineeService(),
       exerciseService: new ExerciseService(),
       exerciseMode: '',
+      bodyPosition: '',
+      eyesActivity: '',
       trainingName: '',
       timer: null,
     };
@@ -113,6 +166,8 @@ export default {
           exerciseId: this.selectedValue._id,
           name: this.selectedValue.label,
           trainingName: this.trainingName,
+          bodyPosition: this.bodyPosition,
+          eyesActivity: this.eyesActivity,
           mode: this.exerciseMode,
         });
         this.showMessage({
@@ -121,6 +176,9 @@ export default {
         });
 
         this.exerciseMode = '';
+        this.eyesActivity = '';
+        this.bodyPosition = '';
+        this.trainingName = '';
         this.selectedValue = {};
       } catch (error) {
         this.showMessage({

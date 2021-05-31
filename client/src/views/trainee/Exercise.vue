@@ -41,6 +41,18 @@
       </div>
 
       <div class="form-group">
+        <label>Body Position: {{ activeExerciseData.bodyPosition}}</label>
+      </div>
+
+      <div class="form-group">
+        <label>Eyes Activity: {{ activeExerciseData.eyesActivity }}</label>
+      </div>
+
+      <div class="form-group">
+        <label>Exercise Mode: {{ activeExerciseData.mode }}</label>
+      </div>
+
+      <div class="form-group">
         <label>First Person Name: {{ getUserFullName }}</label>
         <br />
         <label>Break Points: {{ trainingData.personOne.breakPoints.join(", ") }}</label>
@@ -115,6 +127,7 @@ export default {
         stop: true,
       },
       inputFieldDisable: false,
+      checker: true,
     };
   },
   async mounted() {
@@ -125,7 +138,7 @@ export default {
       this.exerciseDetails = details;
       this.activeExerciseData = activeExerciseData;
 
-      this.exerciseMode = this.activeExerciseData.mode === 'single' ? 1 : 2;
+      this.exerciseMode = this.activeExerciseData.mode?.toLowerCase() === 'single' ? 1 : 2;
       this.trainingData.personOne.name = this.getUserFullName;
       this.trainingData.details = details;
       this.trainingData = { ...this.trainingData, ...activeExerciseData };
@@ -143,6 +156,13 @@ export default {
   },
   methods: {
     startExercise() {
+      if (this.exerciseMode === 2 && this.trainingData.personTwo.name === '') {
+        this.showMessage({
+          message: 'Please, fillup second person name',
+        });
+        return;
+      }
+
       this.buttonDisableState.start = true;
       this.buttonDisableState.stop = false;
       this.inputFieldDisable = true;
@@ -153,7 +173,6 @@ export default {
         }
 
         if (this.trainingData.track === this.exerciseDetails.duration) {
-          console.log(this.trainingData.track === this.exerciseDetails.duration);
           setTimeout(() => {
             clearInterval(this.timer);
             this.buttonDisableState.start = false;
@@ -193,6 +212,11 @@ export default {
     },
     async activitiesSubmit() {
       try {
+        if (!this.checker) {
+          return;
+        }
+
+        this.checker = false;
         await this.traineeService.exercisePerformed(this.$route.params.id, this.trainingData);
 
         this.showMessage({

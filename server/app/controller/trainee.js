@@ -18,13 +18,13 @@ const {
 const { isTrainerActive } = require('../model/trainer');
 
 const login = async (req, res, next) => {
-  const { email, password } = req.routeData;
+  const { username, password } = req.routeData;
 
-  const { data: user } = await getUser({ email }, {}, { active_exercise: 0 });
+  const { data: user } = await getUser({ username }, {}, { active_exercise: 0 });
   const userData = user[0] ?? {};
 
   if (!userData) {
-    return res.status(400).json({ message: 'Wrong email address' });
+    return res.status(400).json({ message: 'Wrong username address' });
   }
 
   if (!(await isTrainerActive(userData.trainer_id))) {
@@ -61,10 +61,10 @@ const login = async (req, res, next) => {
 const add = async (req, res) => {
   const userData = { ...req.routeData };
 
-  const userExist = await getUser({ email: userData.email }, {}, { _id: 1 });
+  const userExist = await getUser({ username: userData.username }, {}, { _id: 1 });
 
   if (userExist.data.length) {
-    return res.status(400).json({ message: 'Email already exists' });
+    return res.status(400).json({ message: 'Username already exists' });
   }
 
   const hashedPassword = await bcrypt.hash(
@@ -93,7 +93,7 @@ const get = async (req, res) => {
         fullName: RegExp(`.*${req.routeData?.search_keyword ?? ''}.*`, 'i'),
       },
       {
-        email: RegExp(`.*${req.routeData?.search_keyword ?? ''}.*`, 'i'),
+        username: RegExp(`.*${req.routeData?.search_keyword ?? ''}.*`, 'i'),
       },
     ],
   };

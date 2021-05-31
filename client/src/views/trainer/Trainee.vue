@@ -79,7 +79,7 @@ export default {
             return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
           },
         },
-        { name: 'email', title: 'Email' },
+        { name: 'username', title: 'Username' },
         {
           name: 'actions',
           title: 'Actions',

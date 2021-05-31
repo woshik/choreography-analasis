@@ -3,13 +3,13 @@ const bcrypt = require('bcryptjs');
 const { getUser, userRegistration, updateTrainer } = require('../model/trainer');
 
 const login = async (req, res, next) => {
-  const { email, password } = req.routeData;
+  const { username, password } = req.routeData;
 
-  const { data: user } = await getUser({ email });
+  const { data: user } = await getUser({ username });
   const userData = user[0] ?? {};
 
   if (!userData) {
-    return res.status(400).json({ message: 'Wrong email address' });
+    return res.status(400).json({ message: 'Wrong username address' });
   }
 
   const isMatch = await bcrypt.compare(password, userData.password);
@@ -40,11 +40,11 @@ const login = async (req, res, next) => {
 const add = async (req, res) => {
   const userData = { ...req.routeData };
 
-  const { data: user } = await getUser({ email: userData.email }, {}, { _id: 1 });
+  const { data: user } = await getUser({ username: userData.username }, {}, { _id: 1 });
   const userExist = user?.[0];
 
   if (userExist) {
-    return res.status(400).json({ message: 'Email already exists' });
+    return res.status(400).json({ message: 'Username already exists' });
   }
 
   const hashedPassword = await bcrypt.hash(req.body.password, await bcrypt.genSalt(10));

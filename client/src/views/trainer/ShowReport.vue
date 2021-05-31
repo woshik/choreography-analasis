@@ -4,8 +4,20 @@
       <h4 class="tittle-w3-agileits mb-4">Perform Exercise: {{ reportData.trainingName }}</h4>
 
       <div class="form-group">
-        <label for="courseCode">Exercise Time Slot</label>
-        <div class="mt-5">
+        <label>Body Position: {{ reportData.bodyPosition }}</label>
+      </div>
+
+      <div class="form-group">
+        <label>Eyes Activity: {{ reportData.eyesActivity }}</label>
+      </div>
+
+      <div class="form-group">
+        <label>Exercise Mode: {{ reportData.mode }}</label>
+      </div>
+
+      <div class="form-group">
+        <label for="courseCode">Exercise Time Slot: </label>
+        <div class="mt-5 mb-5">
           <vue-slider
             :value="getDataFromObject(reportData, 'details.breakPoints')"
             :min="0"
@@ -18,12 +30,14 @@
         </div>
       </div>
 
+      <hr />
+
       <div class="form-group mt-5">
-        <label>First Person: {{ getDataFromObject(reportData, 'personOne.name') }}</label>
+        <label>First Person: {{ getDataFromObject(reportData, "personOne.name") }}</label>
         <br />
         <br />
-        <label for="courseCode">Training Time Slot</label>
-        <div class="mt-5">
+        <label for="courseCode">Training Time Slot: </label>
+        <div class="mt-5 mb-5">
           <vue-slider
             :value="getDataFromObject(reportData, 'personOne.breakPoints')"
             :min="0"
@@ -36,11 +50,13 @@
         </div>
       </div>
 
-      <div class="form-group mt-5" v-if="reportData.mode === 'double'">
-        <label>Second Person: {{ getDataFromObject(reportData, 'personTwo.name') }}</label>
+      <hr />
+
+      <div class="form-group mt-5" v-if="reportData.mode === 'Double'">
+        <label>Second Person: {{ getDataFromObject(reportData, "personTwo.name") }}</label>
         <br />
         <br />
-        <label for="courseCode">Training Time Slot</label>
+        <label for="courseCode">Training Time Slot: </label>
         <div class="mt-5">
           <vue-slider
             :value="getDataFromObject(reportData, 'personTwo.breakPoints')"

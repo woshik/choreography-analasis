@@ -16,10 +16,10 @@
         <input
           class="input100"
           type="text"
-          name="email"
-          placeholder="Email"
+          name="username"
+          placeholder="Username"
           autocomplete="off"
-          v-model.trim="email"
+          v-model.trim="username"
         />
         <span class="focus-input100"></span>
       </div>
@@ -44,6 +44,10 @@
         <span class="txt1 p-b-9"> Don’t have an account? </span>
         <router-link :to="{ name: 'TrainerRegistration' }" class="txt3">
           Sign up now
+        </router-link>
+        <span class="txt1 p-t-13 p-b-13"> OR </span>
+        <router-link :to="{ name: 'TraineeLogin' }" class="txt3">
+          Login as a trainee
         </router-link>
       </div>
     </form>
@@ -72,11 +76,11 @@ export default {
   mixins: [FromValidation],
   data() {
     return {
-      email: '',
+      username: '',
       password: '',
     };
   },
-  formFields: ['email', 'password'],
+  formFields: ['username', 'password'],
   methods: {
     async submit() {
       try {
@@ -85,9 +89,12 @@ export default {
         this.$store.dispatch('user/setAccessToken', response.token);
         this.$router.push({ name: 'Dashboard' });
       } catch (error) {
-        this.showMessage({
-          message: error?.response?.data?.message ?? 'Something Wrong!!!',
-        }, 5000);
+        this.showMessage(
+          {
+            message: error?.response?.data?.message ?? 'Something Wrong!!!',
+          },
+          5000,
+        );
       }
     },
   },
@@ -246,6 +253,11 @@ iframe {
 .p-t-13 {
   padding-top: 13px;
 }
+
+.p-b-13 {
+  padding-bottom: 13px;
+}
+
 .p-t-70 {
   padding-top: 70px;
 }

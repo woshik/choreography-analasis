@@ -23,12 +23,13 @@
                 <h3 class="sub-title-w3-agileits">
                   {{ this.getUserFullName }}
                 </h3>
-                <a href="mailto:info@example.com">{{ this.getUserEmail }}</a>
+                <a href="#">{{ this.getUsername }}</a>
               </div>
             </div>
 
             <div class="dropdown-divider"></div>
             <router-link
+              v-if="isTrainer"
               :to="{ name: isTrainer ? 'TrainerProfile' : 'TraineeProfile' }"
               class="dropdown-item"
             >
@@ -53,7 +54,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['getUserFullName', 'getUserEmail', 'isTrainer']),
+    ...mapGetters('user', ['getUserFullName', 'getUsername', 'isTrainer']),
   },
   methods: {
     manageDropdown() {

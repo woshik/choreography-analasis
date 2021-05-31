@@ -37,14 +37,14 @@
         </div>
 
         <div v-if="!isEditPage" class="form-group">
-          <label for="email">Email</label>
+          <label for="username">Username</label>
           <input
             type="text"
             class="form-control"
-            id="email"
-            placeholder="Email"
+            id="username"
+            placeholder="Username"
             autocomplete="off"
-            v-model.trim="email"
+            v-model.trim="username"
             :disabled="isEditPage"
           />
         </div>
@@ -83,12 +83,12 @@ export default {
     return {
       fullName: '',
       dob: '',
-      email: '',
+      username: '',
       popupStype: {},
       traineeService: new TraineeService(),
     };
   },
-  formFields: ['fullName', 'dob', 'email'],
+  formFields: ['fullName', 'dob', 'username'],
   async mounted() {
     if (this.isEditPage) {
       try {

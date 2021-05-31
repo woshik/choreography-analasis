@@ -36,10 +36,10 @@
         <input
           class="input100"
           type="text"
-          name="email"
-          placeholder="Email"
+          name="username"
+          placeholder="Username"
           autocomplete="off"
-          v-model.trim="email"
+          v-model.trim="username"
         />
       </div>
 
@@ -99,12 +99,12 @@ export default {
     return {
       fullName: '',
       dob: '',
-      email: '',
+      username: '',
       password: '',
       confirmPassword: '',
     };
   },
-  formFields: ['fullName', 'dob', 'email', 'password', 'confirmPassword'],
+  formFields: ['fullName', 'dob', 'username', 'password', 'confirmPassword'],
   methods: {
     async submit() {
       try {
