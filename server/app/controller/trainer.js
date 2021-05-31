@@ -9,7 +9,7 @@ const login = async (req, res, next) => {
   const userData = user?.[0];
 
   if (!userData) {
-    return res.status(400).json({ message: 'Wrong username address' });
+    return res.status(400).json({ message: 'Wrong username.' });
   }
 
   const isMatch = await bcrypt.compare(password, userData.password);
