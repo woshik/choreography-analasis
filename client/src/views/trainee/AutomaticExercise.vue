@@ -180,9 +180,8 @@ export default {
           this.trainingData.track += 1;
 
           if (
-            this.exerciseDetails.breakPoints.includes(this.getTrackInSecond)
+            this.exerciseDetails.breakPoints.includes(this.trainingData.track / 1000)
           ) {
-            console.log(this.exerciseDetails.breakPoints);
             this.audio.play();
             // eslint-disable-next-line no-unused-expressions
             this.trainingData?.personOne?.breakPoints?.push(this.getTrackInSecond);
@@ -240,7 +239,7 @@ export default {
   },
   computed: {
     getTrackInSecond() {
-      return (this.trainingData.track / 1000).toFixed(2);
+      return Number((this.trainingData.track / 1000).toFixed(2));
     },
     getDurationInMinisecond() {
       return (this.exerciseDetails?.duration ?? 0) * 1000;
