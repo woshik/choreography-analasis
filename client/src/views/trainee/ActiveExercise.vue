@@ -1,5 +1,5 @@
 <template>
-  <active-exercise :enable-action="false"/>
+  <active-exercise />
 </template>
 
 <script>

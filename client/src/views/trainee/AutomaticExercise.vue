@@ -21,6 +21,7 @@
             :max="exerciseDetails.duration"
             :tooltip="'always'"
             :process="false"
+            :marks="true"
             disabled
           />
         </div>
@@ -32,8 +33,9 @@
           <vue-slider
             v-model="trainingData.track"
             :min="0"
-            :max="exerciseDetails.duration"
+            :max="getDurationInMinisecond"
             :tooltip="'always'"
+            :tooltip-formatter="formatToolTipLabel"
             :process="false"
             disabled
           />
@@ -41,7 +43,7 @@
       </div>
 
       <div class="form-group">
-        <label>Body Position: {{ activeExerciseData.bodyPosition}}</label>
+        <label>Body Position: {{ activeExerciseData.bodyPosition }}</label>
       </div>
 
       <div class="form-group">
@@ -104,6 +106,8 @@ import { mapGetters } from 'vuex';
 
 import 'vue-slider-component/theme/default.css';
 
+import BeepSound from '@/assets/beep.mp3';
+
 export default {
   components: {
     VueSlider,
@@ -115,8 +119,9 @@ export default {
       exerciseDetails: {},
       activeExerciseData: {},
       trainingData: {
+        type: 'automatic',
         track: 0,
-        keyboardCode: [],
+        eventCode: [],
         personOne: { name: '', breakPoints: [] },
         personTwo: { name: '', breakPoints: [] },
       },
@@ -128,10 +133,13 @@ export default {
       },
       inputFieldDisable: false,
       checker: true,
+      audio: null,
     };
   },
   async mounted() {
     try {
+      this.audio = new Audio(BeepSound);
+
       const { details, ...activeExerciseData } = await this.traineeService.getExerciseData(
         this.$route.params.id,
       );
@@ -168,47 +176,40 @@ export default {
       this.inputFieldDisable = true;
 
       this.timer = setInterval(() => {
-        if (this.trainingData.track < this.exerciseDetails.duration) {
+        if (this.trainingData.track < this.getDurationInMinisecond) {
           this.trainingData.track += 1;
+
+          if (
+            this.exerciseDetails.breakPoints.includes(this.getTrackInSecond)
+          ) {
+            console.log(this.exerciseDetails.breakPoints);
+            this.audio.play();
+            // eslint-disable-next-line no-unused-expressions
+            this.trainingData?.personOne?.breakPoints?.push(this.getTrackInSecond);
+            // eslint-disable-next-line no-unused-expressions
+            this.trainingData?.personTwo?.breakPoints?.push(this.getTrackInSecond);
+          }
         }
 
-        if (this.trainingData.track === this.exerciseDetails.duration) {
-          setTimeout(() => {
-            clearInterval(this.timer);
-            this.buttonDisableState.start = false;
-            this.buttonDisableState.stop = true;
-            document.removeEventListener('keyup', this.keyBoardEvent);
+        if (this.trainingData.track === this.getDurationInMinisecond) {
+          clearInterval(this.timer);
+          this.buttonDisableState.start = false;
+          this.buttonDisableState.stop = true;
 
-            this.activitiesSubmit();
-          }, 1000);
+          this.activitiesSubmit();
         }
-      }, 1000);
-
-      document.addEventListener('keyup', this.keyBoardEvent);
+      }, 1);
     },
     stopExercise() {
       clearInterval(this.timer);
       this.buttonDisableState.start = false;
       this.buttonDisableState.stop = true;
       this.inputFieldDisable = false;
-
-      document.removeEventListener('keyup', this.keyBoardEvent);
     },
     restartExercise() {
       this.trainingData.track = 0;
       this.trainingData.personOne.breakPoints = [];
       this.trainingData.personTwo.breakPoints = [];
-    },
-    keyBoardEvent(e) {
-      if (this.trainingData.personOne && e.code === 'Enter') {
-        this.trainingData.personOne.breakPoints.push(this.trainingData.track);
-      }
-
-      if (this.trainingData.personTwo && e.code === 'Space') {
-        this.trainingData.personTwo.breakPoints.push(this.trainingData.track);
-      }
-
-      this.trainingData.keyboardCode.push(e.code);
     },
     async activitiesSubmit() {
       try {
@@ -225,7 +226,7 @@ export default {
         });
 
         setTimeout(() => {
-          this.$router.push({ name: 'Dashboard' });
+          this.$router.push({ name: 'ActiveExercise' });
         }, 3000);
       } catch (e) {
         this.showMessage({
@@ -233,8 +234,17 @@ export default {
         });
       }
     },
+    formatToolTipLabel(v) {
+      return ((v ?? 0) / 1000).toFixed(2);
+    },
   },
   computed: {
+    getTrackInSecond() {
+      return (this.trainingData.track / 1000).toFixed(2);
+    },
+    getDurationInMinisecond() {
+      return (this.exerciseDetails?.duration ?? 0) * 1000;
+    },
     ...mapGetters('user', ['getUserFullName']),
   },
 };

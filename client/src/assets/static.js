@@ -63,4 +63,10 @@ export const traineeMenu = [
     icon: 'tachometer-alt',
     routeName: 'Dashboard',
   },
+  {
+    id: 2,
+    name: 'Exercise',
+    icon: 'walking',
+    routeName: 'ActiveExercise',
+  },
 ];

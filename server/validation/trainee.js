@@ -45,11 +45,11 @@ const exerciseAssign = {
 };
 
 const performedExerciseData = {
-  track: Joi.number(),
-  trainingName: Joi.string(),
+  track: Joi.number().required(),
+  trainingName: Joi.string().required(),
   personOne: Joi.object(),
   personTwo: Joi.object(),
-  keyboardCode: Joi.array(),
+  eventCode: Joi.array(),
   index: Joi.string().required(),
   exerciseId: Joi.string().required(),
   details: Joi.object(),
@@ -57,6 +57,7 @@ const performedExerciseData = {
   mode: Joi.string().required(),
   bodyPosition: Joi.string().required(),
   eyesActivity: Joi.string().required(),
+  type: Joi.string().required(),
 };
 
 module.exports = {
