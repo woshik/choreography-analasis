@@ -48,10 +48,17 @@ const getAttendance = {
   date: Joi.date(),
 };
 
+const assignTrainee = {
+  ids: Joi.array().items(Joi.string()).messages({
+    'array.includesRequiredUnknowns': 'Trainee id not found',
+  }),
+};
+
 module.exports = {
   exercise,
   assignCourse,
   courseEvents,
   attendance,
   getAttendance,
+  assignTrainee,
 };

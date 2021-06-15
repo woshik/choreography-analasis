@@ -12,7 +12,13 @@
         @edit-row="editRow"
         @delete-row="deleteRow"
         @api-call="callToAPi"
-      />
+      >
+        <template v-slot:default="{ rowData }">
+          <button class="btn btn-info btn-sm m-1" @click="assign(rowData)">
+            <font-awesome-icon icon="sign-in-alt" /> Assign Automatic Exercise
+          </button>
+        </template>
+      </vue-table>
     </div>
     <modal-window v-if="showModal" @open="handleModal">
       <template v-slot:title> Delete Exercise </template>
@@ -43,6 +49,7 @@ export default {
         { name: VuetableFieldSequence, title: 'No.' },
         { name: 'name', title: 'Exercise Name' },
         { name: 'duration', title: 'Exercise Duration' },
+        { name: 'breakPoints', title: 'Break Points', formatter: (value) => value.join(', ') },
         { name: 'actions', title: 'Actions', width: '30%' },
       ],
       tabeleData: [],
@@ -84,6 +91,9 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    assign(data) {
+      this.$router.push({ name: 'AutomaticExercise', params: { id: data._id } });
     },
     handleModal(open) {
       this.showModal = open;

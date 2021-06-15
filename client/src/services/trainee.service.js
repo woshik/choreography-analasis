@@ -82,4 +82,18 @@ export default class Trainee extends Service {
       data: params,
     }).then((result) => result);
   }
+
+  getAutomaticExerciseList() {
+    return request({
+      url: `${this.apiURL}/automatic-exercise`,
+      method: 'get',
+    }).then((result) => result);
+  }
+
+  getAutomaticExercise(id) {
+    return request({
+      url: `${this.apiURL}/automatic-exercise/${id}`,
+      method: 'get',
+    }).then((result) => result);
+  }
 }

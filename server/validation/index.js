@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { login } = require('./auth');
-const { exercise } = require('./exercise');
+const { exercise, assignTrainee } = require('./exercise');
 const { trainerRegistration, trainer } = require('./trainer');
 const {
   traineeRegistration, trainee, exerciseAssign, performedExerciseData,
@@ -42,4 +42,5 @@ module.exports = {
   validateId,
   exerciseAssign,
   performedExerciseData,
+  assignTrainee,
 };

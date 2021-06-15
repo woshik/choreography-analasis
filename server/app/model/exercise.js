@@ -51,9 +51,55 @@ const removeExercise = asyncFunction(async ({ id, trainerId }) => {
   return result.deletedCount === 1;
 });
 
+const automaticExercise = asyncFunction(async ({ id, trainerId }) => {
+  const exercises = await getDB().collection('exercises');
+
+  const result = await exercises.aggregate([
+    {
+      $match: { _id: id, trainer_id: trainerId },
+    },
+    {
+      $lookup: {
+        from: 'trainees',
+        localField: 'trainee',
+        foreignField: '_id',
+        as: 'trainee_details',
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        trainee_details: {
+          fullName: 1,
+          username: 1,
+        },
+      },
+    },
+  ]).toArray();
+
+  return result?.[0]?.trainee_details ?? result;
+});
+
+const assignTrainee = asyncFunction(async ({ id, trainerId, ids }) => {
+  const exercises = await getDB().collection('exercises');
+
+  const result = await exercises.updateOne(
+    { _id: id, trainer_id: trainerId },
+    {
+      $set: {
+        trainee: ids,
+      },
+    },
+  );
+
+  return result.modifiedCount === 1;
+});
+
 module.exports = {
   addExercise,
   getExercise,
   updateExercise,
   removeExercise,
+  automaticExercise,
+  assignTrainee,
 };

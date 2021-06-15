@@ -13,6 +13,8 @@ const {
   addExercisePerformed,
   completeExercise,
   completeExerciseReport,
+  automaticExerciseList,
+  automaticExercise,
 } = require('../model/trainee');
 
 const { isTrainerActive } = require('../model/trainer');
@@ -98,7 +100,9 @@ const get = async (req, res) => {
     ],
   };
 
-  res.json(await getUser(where, req.routeData, { password: 0 }));
+  res.json(await getUser(where, req.routeData, {
+    password: 0, active_exercise: 0, complete_exercise: 0, role: 0, trainer_id: 0,
+  }));
 };
 
 const totalCount = async (req, res) => res.json({
@@ -199,6 +203,10 @@ const getCompleteExerciseReport = async (req, res) => {
   res.json(await completeExerciseReport({ id: ObjectId(id), exerciseId: ObjectId(exerciseId) }));
 };
 
+const getAutomaticExerciseList = async (req, res) => res.json(await automaticExerciseList(req.user._id));
+
+const getAutomaticExerciseDetails = async (req, res) => res.json(await automaticExercise(req.routeData.id));
+
 module.exports = {
   login,
   add,
@@ -215,4 +223,6 @@ module.exports = {
   exercisePerformed,
   getCompleteExercise,
   getCompleteExerciseReport,
+  getAutomaticExerciseList,
+  getAutomaticExerciseDetails,
 };

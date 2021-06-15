@@ -61,6 +61,15 @@ const publicRoutes = [
         },
       },
       {
+        path: '/exercise/assign/:id',
+        name: 'AutomaticExercise',
+        component: () => import(/* webpackChunkName: "automatic-exercises" */'@/views/trainer/AutomaticExercise.vue'),
+        meta: {
+          title: 'Assign Automatic Exercise',
+          active: 'Exercise',
+        },
+      },
+      {
         path: '/exercise/edit/:id',
         name: 'EditExercise',
         component: () => import(/* webpackChunkName: "edit-exercises" */'@/views/trainer/ExerciseForm.vue'),
@@ -170,12 +179,12 @@ const publicRoutes = [
         },
       },
       {
-        path: '/trainee/automatic/manual/:id',
-        name: 'AutomaticExercise',
+        path: '/trainee/automatic/:id',
+        name: 'StartAutomaticExercise',
         component: () => import(/* webpackChunkName: "manual-exercise" */ '@/views/trainee/AutomaticExercise.vue'),
         meta: {
           title: 'Automatic Exercise',
-          active: 'ActiveExercise',
+          active: 'Dashboard',
         },
       },
     ],

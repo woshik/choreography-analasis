@@ -23,7 +23,7 @@
       >
         <template v-slot:default="{ rowData }">
           <button class="btn btn-success btn-sm m-1" @click="assignExercise(rowData)">
-            <font-awesome-icon icon="sign-in-alt" /> Assign Exercise
+            <font-awesome-icon icon="sign-in-alt" /> Assign Manual Exercise
           </button>
           <button class="btn btn-info btn-sm m-1" @click="resetPassword(rowData)">
             <font-awesome-icon icon="redo" /> Reset Password
@@ -75,6 +75,7 @@ export default {
           name: 'dob',
           title: 'Date of Birth',
           formatter(value) {
+            console.log(value);
             const d = new Date(value);
             return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
           },

@@ -9,6 +9,7 @@ const {
   userPassword,
   exerciseAssign,
   performedExerciseData,
+  assignTrainee,
 } = require('../validation/index');
 
 const {
@@ -101,6 +102,30 @@ module.exports = {
     function: 'totalCount',
     middleware: [authTokenValidation('trainer'), permission('trainer')],
   },
+  getAutomaticExercise: {
+    url: '/exercise/automatic/:id',
+    method: 'get',
+    controller: 'exercise',
+    function: 'getAutomaticExercise',
+    middleware: [
+      authTokenValidation('trainer'),
+      permission('trainer'),
+      validate(validateId),
+      convertMongoObjectId,
+    ],
+  },
+  assignAutomaticExercise: {
+    url: '/exercise/assign/:id',
+    method: 'post',
+    controller: 'exercise',
+    function: 'assignAutomaticExercise',
+    middleware: [
+      authTokenValidation('trainer'),
+      permission('trainer'),
+      validate(validateId, assignTrainee),
+      convertMongoObjectId,
+    ],
+  },
   getExerciseById: {
     url: '/exercise/:id',
     method: 'get',
@@ -171,6 +196,18 @@ module.exports = {
       convertMongoObjectId,
     ],
   },
+  getAutomaticExerciseDetails: {
+    url: '/trainee/automatic-exercise/:id',
+    method: 'get',
+    controller: 'trainee',
+    function: 'getAutomaticExerciseDetails',
+    middleware: [
+      authTokenValidation('trainee'),
+      permission('trainee'),
+      validate(validateId),
+      convertMongoObjectId,
+    ],
+  },
   resetTraineePassword: {
     url: '/trainee/reset',
     method: 'patch',
@@ -202,6 +239,13 @@ module.exports = {
       convertMongoObjectId,
     ],
   },
+  getAutomaticExerciseList: {
+    url: '/trainee/automatic-exercise',
+    method: 'get',
+    controller: 'trainee',
+    function: 'getAutomaticExerciseList',
+    middleware: [authTokenValidation('trainee'), permission('trainee')],
+  },
   getTraineeById: {
     url: '/trainee/:id',
     method: 'get',
@@ -214,6 +258,7 @@ module.exports = {
       convertMongoObjectId,
     ],
   },
+
   updateTrainee: {
     url: '/trainee/:id',
     method: 'patch',
@@ -271,9 +316,7 @@ module.exports = {
     method: 'get',
     controller: 'trainee',
     function: 'getCompleteExerciseReport',
-    middleware: [
-      authTokenValidation('trainer'),
-      permission('trainer'),
-    ],
+    middleware: [authTokenValidation('trainer'), permission('trainer')],
   },
+
 };

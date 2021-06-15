@@ -221,6 +221,36 @@ const completeExerciseReport = asyncFunction(async ({ id, exerciseId }) => {
   return response;
 });
 
+const automaticExerciseList = asyncFunction(async (id) => {
+  const exercises = await getDB().collection('exercises');
+
+  const result = await exercises.find({
+    trainee: id,
+  }, {
+    projection: {
+      trainer_id: 0,
+      trainee: 0,
+    },
+  }).toArray();
+
+  return result;
+});
+
+const automaticExercise = asyncFunction(async (id) => {
+  const exercises = await getDB().collection('exercises');
+
+  const result = await exercises.findOne({
+    _id: id,
+  }, {
+    projection: {
+      trainer_id: 0,
+      trainee: 0,
+    },
+  });
+
+  return result;
+});
+
 module.exports = {
   getUser,
   userRegistration,
@@ -233,4 +263,6 @@ module.exports = {
   addExercisePerformed,
   completeExercise,
   completeExerciseReport,
+  automaticExerciseList,
+  automaticExercise,
 };

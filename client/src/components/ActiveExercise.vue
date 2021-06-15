@@ -11,7 +11,7 @@
               <th scope="col">Exercise Name</th>
               <th scope="col">Duration</th>
               <th scope="col">Mode</th>
-              <th v-if="enableAction" scope="col">Action</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>

@@ -1,8 +1,11 @@
+const { ObjectId } = require('mongodb');
 const {
   addExercise,
   getExercise,
   updateExercise,
   removeExercise,
+  automaticExercise,
+  assignTrainee,
 } = require('../model/exercise');
 
 const add = async (req, res) => {
@@ -27,7 +30,7 @@ const get = async (req, res) => {
     ],
   };
 
-  res.json(await getExercise(where, req.routeData, { breakPoints: 0 }));
+  res.json(await getExercise(where, req.routeData, {}));
 };
 
 const getExerciseById = async (req, res) => res.json(
@@ -39,7 +42,8 @@ const getExerciseById = async (req, res) => res.json(
 );
 
 const totalCount = async (req, res) => res.json({
-  count: (await getExercise({ trainer_id: req.user._id }, {}, { _id: 1 })).total,
+  count: (await getExercise({ trainer_id: req.user._id }, {}, { _id: 1 }))
+    .total,
 });
 
 const update = async (req, res) => {
@@ -62,6 +66,21 @@ const remove = async (req, res) => {
   }
 };
 
+const getAutomaticExercise = async (req, res) => res
+  .json(await automaticExercise({ ...req.routeData, trainerId: req.user._id }));
+
+const assignAutomaticExercise = async (req, res) => {
+  const ids = req.routeData.ids.map((id) => ObjectId(id));
+
+  if (await assignTrainee({ id: req.routeData.id, ids, trainerId: req.user._id })) {
+    res.json({ success: true });
+  } else {
+    res
+      .status(400)
+      .json({ success: false, message: 'Operation fail, Try again later' });
+  }
+};
+
 module.exports = {
   add,
   get,
@@ -69,4 +88,6 @@ module.exports = {
   update,
   remove,
   getExerciseById,
+  getAutomaticExercise,
+  assignAutomaticExercise,
 };
