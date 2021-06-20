@@ -1,61 +1,35 @@
 <template>
   <div class="row">
     <div class="outer-w3-agile col-xl mt-3">
-      <div v-if="!report">
-        <h4 class="tittle-w3-agileits mb-4">
-          Perform Automatic Exercise: {{ exerciseDetails.name }}
-        </h4>
+      <h4 class="tittle-w3-agileits mb-4">
+        Perform Automatic Exercise: {{ exerciseDetails.name }}
+      </h4>
 
-        <div class="form-group">
-          <label>Person Name: {{ getUserFullName }}</label>
-          <br />
-          <label>Timer: {{ getTrackInSecond }} sec</label>
-        </div>
-
-        <div class="form-group mt-5">
-          <button
-            class="btn btn-sm btn-info mr-2"
-            @click="startExercise"
-            :disabled="buttonDisableState.start"
-          >
-            Start
-          </button>
-          <button
-            class="btn btn-sm btn-info mr-2"
-            @click="stopExercise"
-            :disabled="buttonDisableState.stop"
-          >
-            Stop
-          </button>
-          <button class="btn btn-sm btn-info mr-2" @click="restartExercise">
-            Reset
-          </button>
-          <button
-            class="btn btn-sm btn-info mr-2"
-            @click="exerciseFinish"
-            :disabled="buttonDisableState.finish"
-          >
-            Finish
-          </button>
-        </div>
+      <div class="form-group">
+        <label>Person Name: {{ getUserFullName }}</label>
+        <br />
+        <label>Timer: {{ trainingData.track }} sec</label>
       </div>
-      <div v-else>
-        <h4 class="tittle-w3-agileits mb-4">{{ exerciseDetails.name }} Exercise Report</h4>
-        <div class="form-group">
-          <label>Person Name: {{ getUserFullName }}</label>
-          <br />
-          <label>Break Points: {{ trainingData.personOne.breakPoints.join(", ") }}</label>
-          <br />
-          <label>Time Conflict: {{ timeConflictResult }}</label>
-        </div>
-        <div class="form-group mt-5">
-          <button
-            class="btn btn-sm btn-info mr-2"
-            @click="backToDashBoard"
-          >
-            Back To Dashboard
-          </button>
-        </div>
+
+      <label> Exercise Performed: {{ exerciseDetails.count }} Time</label>
+      <div class="form-group mt-5">
+        <button
+          class="btn btn-sm btn-info mr-2"
+          @click="startExercise"
+          :disabled="buttonDisableState.start"
+        >
+          Start
+        </button>
+        <button
+          class="btn btn-sm btn-info mr-2"
+          @click="stopExercise"
+          :disabled="buttonDisableState.stop"
+        >
+          Stop
+        </button>
+        <button class="btn btn-sm btn-info mr-2" @click="restartExercise">
+          Reset
+        </button>
       </div>
     </div>
   </div>
@@ -81,7 +55,6 @@ export default {
       buttonDisableState: {
         start: false,
         stop: true,
-        finish: true,
       },
       audio: null,
       report: false,
@@ -106,58 +79,44 @@ export default {
     startExercise() {
       this.buttonDisableState.start = true;
       this.buttonDisableState.stop = false;
-      this.buttonDisableState.finish = false;
 
       this.timer = setInterval(() => {
         this.trainingData.track += 1;
 
-        if (this.exerciseDetails.breakPoints.includes(this.trainingData.track / 1000)) {
+        if (this.exerciseDetails.breakPoints.includes(this.trainingData.track)) {
           this.audio.play();
-          // eslint-disable-next-line no-unused-expressions
-          this.trainingData?.personOne?.breakPoints?.push(this.getTrackInSecond);
         }
-      }, 1);
+
+        if (this.exerciseDetails.duration === this.trainingData.track) {
+          this.automaticExerciseCount();
+        }
+      }, 1000);
     },
     stopExercise() {
       clearInterval(this.timer);
       this.buttonDisableState.start = false;
       this.buttonDisableState.stop = true;
-      this.buttonDisableState.finish = true;
     },
     restartExercise() {
       this.stopExercise();
       this.trainingData.track = 0;
       this.trainingData.personOne.breakPoints = [];
     },
-    formatToolTipLabel(v) {
-      return ((v ?? 0) / 1000).toFixed(2);
-    },
-    exerciseFinish() {
-      this.stopExercise();
-      this.report = true;
-    },
     backToDashBoard() {
       this.$router.push({ name: 'Dashboard' });
     },
+    async automaticExerciseCount() {
+      this.stopExercise();
+      try {
+        await this.traineeService.automaticExerciseCount(this.$route.params.id);
+        this.exerciseDetails.count += 1;
+        this.restartExercise();
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   computed: {
-    getTrackInSecond() {
-      return Number((this.trainingData.track / 1000).toFixed(2));
-    },
-    getDurationInMinisecond() {
-      return (this.exerciseDetails?.duration ?? 0) * 1000;
-    },
-    timeConflict() {
-      return this.trainingData.track - this.getDurationInMinisecond;
-    },
-    timeConflictResult() {
-      // eslint-disable-next-line no-nested-ternary
-      return this.timeConflict < 0
-        ? `Stop before ${(Math.abs(this.timeConflict) / 1000).toFixed(2)} sec`
-        : this.timeConflict === 0
-        ? 'Stop at 0 sec'
-        : `Stop after ${(Math.abs(this.timeConflict) / 1000).toFixed(2)} sec`;
-    },
     ...mapGetters('user', ['getUserFullName']),
   },
 };

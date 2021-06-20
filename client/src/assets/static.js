@@ -65,8 +65,8 @@ export const traineeMenu = [
   },
   {
     id: 2,
-    name: 'Exercise',
+    name: 'Automatic Exercise',
     icon: 'walking',
-    routeName: 'ActiveExercise',
+    routeName: 'TraineeAutomaticExercise',
   },
 ];

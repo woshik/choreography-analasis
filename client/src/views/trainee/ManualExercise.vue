@@ -12,21 +12,6 @@
       >
         {{ messageDisplay }}
       </div>
-      <div class="form-group">
-        <label for="courseCode">Exercise Time Slot</label>
-        <div class="mt-5">
-          <vue-slider
-            v-model="exerciseDetails.breakPoints"
-            :min="0"
-            :max="exerciseDetails.duration"
-            :tooltip="'always'"
-            :process="false"
-            :marks="true"
-
-            disabled
-          />
-        </div>
-      </div>
 
       <div class="form-group mt-5 mb-5">
         <label for="courseCode">Training Time Slot</label>

@@ -196,6 +196,18 @@ module.exports = {
       convertMongoObjectId,
     ],
   },
+  automaticExerciseCount: {
+    url: '/trainee/automatic-exercise/count/:id',
+    method: 'post',
+    controller: 'trainee',
+    function: 'automaticExerciseCount',
+    middleware: [
+      authTokenValidation('trainee'),
+      permission('trainee'),
+      validate(validateId),
+      convertMongoObjectId,
+    ],
+  },
   getAutomaticExerciseDetails: {
     url: '/trainee/automatic-exercise/:id',
     method: 'get',

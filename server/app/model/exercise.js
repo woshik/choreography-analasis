@@ -68,8 +68,8 @@ const automaticExercise = asyncFunction(async ({ id, trainerId }) => {
     },
     {
       $project: {
-        _id: 0,
         trainee_details: {
+          _id: 1,
           fullName: 1,
           username: 1,
         },

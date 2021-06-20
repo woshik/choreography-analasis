@@ -96,4 +96,11 @@ export default class Trainee extends Service {
       method: 'get',
     }).then((result) => result);
   }
+
+  automaticExerciseCount(id) {
+    return request({
+      url: `${this.apiURL}/automatic-exercise/count/${id}`,
+      method: 'post',
+    }).then((result) => result);
+  }
 }

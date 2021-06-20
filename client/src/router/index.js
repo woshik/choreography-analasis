@@ -160,22 +160,12 @@ const publicRoutes = [
       },
 
       {
-        path: '/active-exercise',
-        name: 'ActiveExercise',
-        component: () => import(/* webpackChunkName: "manage-exercises" */'@/views/trainee/ActiveExercise.vue'),
+        path: '/automatic-exercise',
+        name: 'TraineeAutomaticExercise',
+        component: () => import(/* webpackChunkName: "manage-exercises" */'@/views/trainee/Exercise.vue'),
         meta: {
-          title: 'Active Exercise',
-          active: 'ActiveExercise',
-        },
-      },
-
-      {
-        path: '/trainee/exercise/manual/:id',
-        name: 'ManualExercise',
-        component: () => import(/* webpackChunkName: "manual-exercise" */ '@/views/trainee/ManualExercise.vue'),
-        meta: {
-          title: 'Manual Exercise',
-          active: 'ActiveExercise',
+          title: 'Automatic Exercise',
+          active: 'TraineeAutomaticExercise',
         },
       },
       {
@@ -184,9 +174,19 @@ const publicRoutes = [
         component: () => import(/* webpackChunkName: "manual-exercise" */ '@/views/trainee/AutomaticExercise.vue'),
         meta: {
           title: 'Automatic Exercise',
+          active: 'TraineeAutomaticExercise',
+        },
+      },
+      {
+        path: '/trainee/exercise/manual/:id',
+        name: 'ManualExercise',
+        component: () => import(/* webpackChunkName: "manual-exercise" */ '@/views/trainee/ManualExercise.vue'),
+        meta: {
+          title: 'Manual Exercise',
           active: 'Dashboard',
         },
       },
+
     ],
   },
 ];

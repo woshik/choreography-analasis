@@ -223,6 +223,16 @@ const completeExerciseReport = asyncFunction(async ({ id, exerciseId }) => {
 
 const automaticExerciseList = asyncFunction(async (id) => {
   const exercises = await getDB().collection('exercises');
+  const trainees = await getDB().collection('trainees');
+
+  let exerciseResult = await trainees.findOne({ _id: id }, {
+    projection: {
+      _id: 0,
+      automatic_exercise: 1,
+    },
+  });
+
+  exerciseResult = exerciseResult?.automatic_exercise ?? [];
 
   const result = await exercises.find({
     trainee: id,
@@ -233,11 +243,26 @@ const automaticExerciseList = asyncFunction(async (id) => {
     },
   }).toArray();
 
-  return result;
+  return result.map((item) => ({ ...item, ...exerciseResult.find((ex) => ex._id.toString() === item._id.toString()) }));
 });
 
-const automaticExercise = asyncFunction(async (id) => {
+const automaticExercise = asyncFunction(async (id, traineeId) => {
   const exercises = await getDB().collection('exercises');
+
+  const trainees = await getDB().collection('trainees');
+
+  let exerciseResult = await trainees.findOne({ _id: traineeId }, {
+    projection: {
+      _id: 0,
+      automatic_exercise: {
+        $elemMatch: {
+          _id: id,
+        },
+      },
+    },
+  });
+
+  exerciseResult = exerciseResult?.automatic_exercise?.[0].count ?? 0;
 
   const result = await exercises.findOne({
     _id: id,
@@ -248,7 +273,36 @@ const automaticExercise = asyncFunction(async (id) => {
     },
   });
 
-  return result;
+  return { ...result, count: exerciseResult };
+});
+
+const setAutomaticExerciseCount = asyncFunction(async (id, traineeId) => {
+  const trainees = await getDB().collection('trainees');
+  let result;
+
+  if (await trainees.findOne({ _id: traineeId, 'automatic_exercise._id': id })) {
+    result = await trainees.updateOne({
+      _id: traineeId,
+      'automatic_exercise._id': id,
+    }, {
+      $inc: {
+        'automatic_exercise.$.count': 1,
+      },
+    });
+  } else {
+    result = await trainees.updateOne({
+      _id: traineeId,
+    }, {
+      $push: {
+        automatic_exercise: {
+          _id: id,
+          count: 1,
+        },
+      },
+    });
+  }
+
+  return result.modifiedCount === 1;
 });
 
 module.exports = {
@@ -265,4 +319,5 @@ module.exports = {
   completeExerciseReport,
   automaticExerciseList,
   automaticExercise,
+  setAutomaticExerciseCount,
 };
