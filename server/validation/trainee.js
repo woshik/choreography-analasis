@@ -49,7 +49,6 @@ const performedExerciseData = {
   trainingName: Joi.string().required(),
   personOne: Joi.object(),
   personTwo: Joi.object(),
-  eventCode: Joi.array(),
   index: Joi.string().required(),
   exerciseId: Joi.string().required(),
   details: Joi.object(),
@@ -58,6 +57,7 @@ const performedExerciseData = {
   bodyPosition: Joi.string().required(),
   eyesActivity: Joi.string().required(),
   type: Joi.string().required(),
+  create_at: Joi.date(),
 };
 
 module.exports = {

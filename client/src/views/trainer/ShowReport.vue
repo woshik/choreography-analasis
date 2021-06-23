@@ -16,6 +16,10 @@
       </div>
 
       <div class="form-group">
+        <label>Exercise Date Time: {{ getExerciseTime }}</label>
+      </div>
+
+      <div class="form-group">
         <label for="courseCode">Exercise Time Slot: </label>
         <div class="mt-5 mb-5">
           <vue-slider
@@ -77,7 +81,7 @@
 import TraineeService from '@/services/trainee.service';
 import VueSlider from 'vue-slider-component';
 import common from '@/mixins/common';
-
+import moment from 'moment';
 import 'vue-slider-component/theme/default.css';
 
 export default {
@@ -102,6 +106,11 @@ export default {
     } catch (error) {
       console.log(error);
     }
+  },
+  computed: {
+    getExerciseTime() {
+      return moment(this.reportData?.create_at ?? '')?.format('MMMM DD, YYYY [at] h:mm:ss A');
+    },
   },
 };
 </script>
