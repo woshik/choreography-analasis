@@ -19,6 +19,7 @@ import {
   faCheck,
   faCopy,
   faSignInAlt,
+  faLongArrowAltLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -41,6 +42,7 @@ library.add(
   faCheck,
   faCopy,
   faSignInAlt,
+  faLongArrowAltLeft,
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

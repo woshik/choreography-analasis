@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group">
-          <label>Body Position: {{ activeExerciseData.bodyPosition}}</label>
+          <label>Body Position: {{ activeExerciseData.bodyPosition }}</label>
         </div>
 
         <div class="form-group">
@@ -81,14 +81,85 @@
         </div>
       </div>
       <div v-else>
-        <h4 class="tittle-w3-agileits mb-4">
-          Exercise Report: {{ activeExerciseData.trainingName }}
-        </h4>
+        <h4 class="tittle-w3-agileits mb-4">Perform Exercise: {{ trainingData.trainingName }}</h4>
+
         <div class="form-group">
-          <label>Person Name: {{ getUserFullName }}</label>
-          <br />
-          <label>Timer: {{ trainingData.track }} sec</label>
+          <label>Body Position: {{ trainingData.bodyPosition }}</label>
         </div>
+
+        <div class="form-group">
+          <label>Eyes Activity: {{ trainingData.eyesActivity }}</label>
+        </div>
+
+        <div class="form-group">
+          <label>Exercise Mode: {{ trainingData.mode }}</label>
+        </div>
+
+        <div class="form-group">
+          <label>Exercise Date Time: {{ getExerciseTime }}</label>
+        </div>
+
+        <div class="form-group">
+          <label for="courseCode">Exercise Time Slot: </label>
+          <div class="mt-5 mb-5">
+            <vue-slider
+              :value="trainingData.details.breakPoints"
+              :min="0"
+              :max="trainingData.details.duration"
+              :tooltip="'always'"
+              :process="false"
+              :marks="true"
+              disabled
+            />
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="form-group mt-5">
+          <label>First Person: {{ trainingData.personOne.name }}</label>
+          <br />
+          <label>Click Difference: {{ getFirstPersonDifference }}</label>
+          <br />
+          <br />
+          <label for="courseCode">Training Time Slot: </label>
+          <div class="mt-5 mb-5">
+            <vue-slider
+              :value="trainingData.personOne.breakPoints"
+              :min="0"
+              :max="trainingData.details.duration"
+              :tooltip="'always'"
+              :process="false"
+              :marks="true"
+              disabled
+            />
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="form-group mt-5" v-if="trainingData.mode === 'Double'">
+          <label>Second Person: {{ trainingData.personTwo.name }}</label>
+          <br />
+          <label>Click Difference: {{ getSecondPersonDifference }}</label>
+          <br />
+          <br />
+          <label for="courseCode">Training Time Slot: </label>
+          <div class="mt-5">
+            <vue-slider
+              :value="trainingData.personTwo.breakPoints"
+              :min="0"
+              :max="trainingData.details.duration"
+              :tooltip="'always'"
+              :process="false"
+              :marks="true"
+              disabled
+            />
+          </div>
+        </div>
+        <br />
+        <br />
+        <button class="btn btn-primary btn-sm" @click="goToDashboard">Back To Dashboard</button>
       </div>
     </div>
   </div>
@@ -99,6 +170,7 @@ import TraineeService from '@/services/trainee.service';
 import VueSlider from 'vue-slider-component';
 import FromValidation from '@/mixins/FormValidation';
 import { mapGetters } from 'vuex';
+import moment from 'moment';
 import 'vue-slider-component/theme/default.css';
 
 export default {
@@ -206,13 +278,21 @@ export default {
         return;
       }
 
-      if (this.trainingData.personOne && this.trainingData.personOne.clickCount < this.exerciseDetails.breakPoints.length && e.type === 'mouseup') {
+      if (
+        this.trainingData.personOne
+        && this.trainingData.personOne.clickCount < this.exerciseDetails.breakPoints.length
+        && e.type === 'mouseup'
+      ) {
         const getCurrentTimer = ((new Date().getTime() - this.startTime) / 1000).toFixed(2);
         this.trainingData.personOne.clickCount += 1;
         this.trainingData.personOne.breakPoints.push(getCurrentTimer);
       }
 
-      if (this.trainingData.personTwo && this.trainingData.personTwo.clickCount < this.exerciseDetails.breakPoints.length && e.code === 'Space') {
+      if (
+        this.trainingData.personTwo
+        && this.trainingData.personTwo.clickCount < this.exerciseDetails.breakPoints.length
+        && e.code === 'Space'
+      ) {
         const getCurrentTimer = ((new Date().getTime() - this.startTime) / 1000).toFixed(2);
         this.trainingData.personTwo.clickCount += 1;
         this.trainingData.personTwo.breakPoints.push(getCurrentTimer);
@@ -235,8 +315,28 @@ export default {
         });
       }
     },
+    goToDashboard() {
+      this.$router.push({ name: 'Dashboard' });
+    },
   },
   computed: {
+    getExerciseTime() {
+      return moment(this.trainingData?.create_at ?? '')?.format('MMMM DD, YYYY [at] h:mm:ss A');
+    },
+    getFirstPersonDifference() {
+      return this.trainingData.details.breakPoints
+        .map((point, index) => (this.trainingData.personOne.breakPoints[index]
+            ? (this.trainingData.personOne.breakPoints[index] - point).toFixed(2)
+            : 'Empty'))
+        .join(', ');
+    },
+    getSecondPersonDifference() {
+      return this.trainingData.details.breakPoints
+        .map((point, index) => (this.trainingData.personTwo.breakPoints[index]
+            ? (this.trainingData.personTwo.breakPoints[index] - point).toFixed(2)
+            : 'Empty'))
+        .join(', ');
+    },
     ...mapGetters('user', ['getUserFullName']),
   },
 };

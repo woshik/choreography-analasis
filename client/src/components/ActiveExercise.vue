@@ -9,7 +9,6 @@
               <th scope="col">#</th>
               <th scope="col">Training Name</th>
               <th scope="col">Exercise Name</th>
-              <th scope="col">Duration</th>
               <th scope="col">Mode</th>
               <th scope="col">Action</th>
             </tr>
@@ -19,7 +18,6 @@
               <th scope="row">{{ index + 1 }}</th>
               <td>{{ exercise.trainingName }}</td>
               <td>{{ exercise.name }}</td>
-              <td>{{ exercise.exercise.duration }} sec</td>
               <td>{{ exercise.mode }}</td>
               <td v-if="enableAction">
                 <button type="button" class="btn btn-sm btn-primary" @click="manualExercise(index)">

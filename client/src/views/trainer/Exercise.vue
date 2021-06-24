@@ -49,7 +49,7 @@ export default {
         { name: VuetableFieldSequence, title: 'No.' },
         { name: 'name', title: 'Exercise Name' },
         { name: 'duration', title: 'Exercise Duration' },
-        { name: 'breakPoints', title: 'Break Points', formatter: (value) => value.join(', ') },
+        { name: 'breakPoints', title: 'Break Points', formatter: (value) => `${value.join(', ')} sec` },
         { name: 'actions', title: 'Actions', width: '30%' },
       ],
       tabeleData: [],

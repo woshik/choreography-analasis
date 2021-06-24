@@ -9,7 +9,7 @@ const common = {
         }
       });
 
-      return param ?? defaultValue;
+      return param || defaultValue;
     },
   },
 };
