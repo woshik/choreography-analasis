@@ -30,7 +30,6 @@
         <button class="btn btn-sm btn-info mr-2" @click="restartExercise">
           Reset
         </button>
-        <audio style="display:none" ref="audio" :src="BeepSound"></audio>
       </div>
     </div>
   </div>
@@ -64,6 +63,7 @@ export default {
   },
   async mounted() {
     try {
+      this.audio = new Audio(BeepSound);
       const response = await this.traineeService.getAutomaticExercise(this.$route.params.id);
       this.exerciseDetails = response;
       this.trainingData.personOne.name = this.getUserFullName;
@@ -84,9 +84,7 @@ export default {
         this.trainingData.track += 1;
 
         if (this.exerciseDetails.breakPoints.includes(this.trainingData.track)) {
-          console.log(this.$refs.audio);
-          this.$refs.audio.crossOrigin = 'anonymous';
-          this.$refs.audio.play();
+          this.audio.play();
         }
 
         if (this.exerciseDetails.duration === this.trainingData.track) {
