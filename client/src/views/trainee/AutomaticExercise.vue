@@ -84,6 +84,8 @@ export default {
         this.trainingData.track += 1;
 
         if (this.exerciseDetails.breakPoints.includes(this.trainingData.track)) {
+          console.log(this.$refs.audio);
+          this.$refs.audio.crossOrigin = 'anonymous';
           this.$refs.audio.play();
         }
 
