@@ -31,6 +31,7 @@
           Reset
         </button>
       </div>
+      <audio :src="BeepSound" ref="playAudio"></audio>
     </div>
   </div>
 </template>
@@ -56,22 +57,12 @@ export default {
         start: false,
         stop: true,
       },
-      audio: null,
       report: false,
-      audioBuffer: null,
+      BeepSound,
     };
   },
   async mounted() {
     try {
-      this.audio = new (window.webkitAudioContext || window.AudioContext)();
-      fetch(BeepSound)
-      .then((response) => response.arrayBuffer())
-      .then((arrayBuffer) => this.audio.decodeAudioData(arrayBuffer))
-      .then((audioBuffer) => {
-        this.audioBuffer = audioBuffer;
-      })
-      .catch(console.error);
-
       const response = await this.traineeService.getAutomaticExercise(this.$route.params.id);
       this.exerciseDetails = response;
       this.trainingData.personOne.name = this.getUserFullName;
@@ -85,6 +76,7 @@ export default {
   },
   methods: {
     startExercise() {
+      this.$refs.playAudio.play();
       this.buttonDisableState.start = true;
       this.buttonDisableState.stop = false;
 
@@ -92,10 +84,7 @@ export default {
         this.trainingData.track += 1;
 
         if (this.exerciseDetails.breakPoints.includes(this.trainingData.track)) {
-          const source = this.audio.createBufferSource();
-          source.buffer = this.audioBuffer;
-          source.connect(this.audio.destination);
-          source.start();
+          this.$refs.playAudio.play();
         }
 
         if (this.exerciseDetails.duration === this.trainingData.track) {
@@ -118,6 +107,7 @@ export default {
     },
     async automaticExerciseCount() {
       this.stopExercise();
+      this.$refs.playAudio.play();
       try {
         await this.traineeService.automaticExerciseCount(this.$route.params.id);
         this.exerciseDetails.count += 1;
