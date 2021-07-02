@@ -7,8 +7,6 @@
 
       <div class="form-group">
         <label>Person Name: {{ getUserFullName }}</label>
-        <br />
-        <label>Timer: {{ trainingData.track }} sec</label>
       </div>
 
       <label> Exercise Performed: {{ exerciseDetails.count }} Time</label>

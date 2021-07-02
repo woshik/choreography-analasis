@@ -148,6 +148,7 @@
         <button class="btn btn-primary btn-sm" @click="goToDashboard">Back To Dashboard</button>
       </div>
     </div>
+    <audio :src="BeepSound" ref="playAudio"></audio>
   </div>
 </template>
 
@@ -157,6 +158,7 @@ import VueSlider from 'vue-slider-component';
 import FromValidation from '@/mixins/FormValidation';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
+import BeepSound from '@/assets/beep.mp3';
 import 'vue-slider-component/theme/default.css';
 
 export default {
@@ -185,6 +187,7 @@ export default {
       inputFieldDisable: false,
       startTime: null,
       report: false,
+      BeepSound,
     };
   },
   async mounted() {
@@ -219,6 +222,8 @@ export default {
         });
         return;
       }
+
+      this.$refs.playAudio.play();
       this.startTime = new Date().getTime();
       this.buttonDisableState.start = true;
       this.buttonDisableState.stop = false;
@@ -231,6 +236,7 @@ export default {
 
         if (this.trainingData.track === this.exerciseDetails.duration) {
           this.stopExercise();
+          this.$refs.playAudio.play();
           this.activitiesSubmit();
 
           this.buttonDisableState.start = true;
