@@ -58,12 +58,20 @@ export default {
       },
       audio: null,
       report: false,
-      BeepSound,
+      audioBuffer: null,
     };
   },
   async mounted() {
     try {
-      this.audio = new Audio(BeepSound);
+      this.audio = new (window.webkitAudioContext || window.AudioContext)();
+      fetch(BeepSound)
+      .then((response) => response.arrayBuffer())
+      .then((arrayBuffer) => this.audio.decodeAudioData(arrayBuffer))
+      .then((audioBuffer) => {
+        this.audioBuffer = audioBuffer;
+      })
+      .catch(console.error);
+
       const response = await this.traineeService.getAutomaticExercise(this.$route.params.id);
       this.exerciseDetails = response;
       this.trainingData.personOne.name = this.getUserFullName;
@@ -84,7 +92,10 @@ export default {
         this.trainingData.track += 1;
 
         if (this.exerciseDetails.breakPoints.includes(this.trainingData.track)) {
-          this.audio.play();
+          const source = this.audio.createBufferSource();
+          source.buffer = this.audioBuffer;
+          source.connect(this.audio.destination);
+          source.start();
         }
 
         if (this.exerciseDetails.duration === this.trainingData.track) {
