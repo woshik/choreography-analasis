@@ -32,6 +32,7 @@ process.on('unhandledRejection', (error) => {
 if (process.env.NODE_ENV === 'production' && fs.existsSync(__dirname, '../client/build')) {
   server.use('/js', express.static(resolve(__dirname, '../client/dist/js')));
   server.use('/css', express.static(resolve(__dirname, '../client/dist/css')));
+  server.use('/media', express.static(resolve(__dirname, '../client/dist/media')));
 }
 
 // important middleware
